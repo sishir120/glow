@@ -1,0 +1,42 @@
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/preflight.css" layer(base);
+@import "tailwindcss/utilities.css";
+
+@layer theme {
+  @theme {
+    /* Glow Lumina Design System Tokens */
+    --color-brand: #0A84FF;
+    --color-brand-light: #5AC8FA;
+    --color-surface: #1C1C1E;
+    --color-surface-elevated: #2C2C2E;
+    
+    --font-rounded: "SF Pro Rounded", sans-serif;
+    
+    --text-xs--line-height: calc(1em / 0.75);
+    --text-sm--line-height: calc(1.25em / 0.875);
+    --text-base--line-height: calc(1.5em / 1);
+    
+    --leading-tight: 1.25em;
+    --leading-snug: 1.375em;
+    --leading-normal: 1.5em;
+  }
+}
+
+/* Platform-specific font families */
+@media android {
+  :root {
+    --font-mono: monospace;
+    --font-rounded: normal;
+    --font-serif: serif;
+    --font-sans: normal;
+  }
+}
+
+@media ios {
+  :root {
+    --font-mono: ui-monospace;
+    --font-serif: ui-serif;
+    --font-sans: system-ui;
+    --font-rounded: ui-rounded;
+  }
+}
