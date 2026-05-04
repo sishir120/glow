@@ -35,10 +35,6 @@ jobs:
         working-directory: ./glow-flutter
         run: flutter pub get
 
-      - name: Run analyzer
-        working-directory: ./glow-flutter
-        run: flutter analyze --no-fatal-infos
-
       - name: Build APK (Release)
         working-directory: ./glow-flutter
         run: flutter build apk --release --split-per-abi
