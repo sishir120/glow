@@ -1,6 +1,7 @@
 name: Flutter Bootstrap
 on:
-  workflow_dispatch:
+  push:
+    branches: [ main ]
 
 jobs:
   bootstrap:
@@ -29,3 +30,4 @@ jobs:
           git add glow-flutter/
           git commit -m "chore: bootstrap Flutter project"
           git push
+
