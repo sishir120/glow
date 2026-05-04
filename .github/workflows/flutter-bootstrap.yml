@@ -6,6 +6,8 @@ on:
 jobs:
   bootstrap:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
         with:
@@ -18,6 +20,10 @@ jobs:
 
       - name: Create Flutter project
         run: |
+          if [ -d "glow-flutter" ]; then
+            echo "Already bootstrapped"
+            exit 0
+          fi
           flutter create glow-flutter \
             --org com.glow.app \
             --project-name glow_flutter \
@@ -25,9 +31,10 @@ jobs:
 
       - name: Commit to repo
         run: |
-          git config user.name "github-actions"
-          git config user.email "actions@github.com"
-          git add glow-flutter/
-          git commit -m "chore: bootstrap Flutter project"
-          git push
-
+          if [ -d "glow-flutter" ] && [ -n "$(git status --porcelain)" ]; then
+            git config user.name "github-actions"
+            git config user.email "actions@github.com"
+            git add glow-flutter/
+            git commit -m "chore: bootstrap Flutter project"
+            git push
+          fi
