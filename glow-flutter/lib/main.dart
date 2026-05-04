@@ -42,7 +42,7 @@ class _WaitlistScreenState extends State<WaitlistScreen>
   final _nameController = TextEditingController();
   bool _isLoading = false;
   bool _isSuccess = false;
-  String? _error;
+  String? _errorMessage;
 
   late AnimationController _fadeController;
   late AnimationController _pulseController;
@@ -83,42 +83,36 @@ class _WaitlistScreenState extends State<WaitlistScreen>
 
   Future<void> _submitWaitlist() async {
     if (_emailController.text.isEmpty || !_emailController.text.contains('@')) {
-      setState(() => _error = 'Please enter a valid email address.');
+      setState(() => _errorMessage = 'Please enter a valid email address.');
       return;
     }
 
     setState(() {
       _isLoading = true;
-      _error = null;
+      _errorMessage = null;
     });
 
     try {
-      // Replace this with your actual Neon/API endpoint
       final response = await http.post(
-        Uri.parse('https://your-glow-app.vercel.app/api/waitlist'),
+        Uri.parse('https://glow-app-pied.vercel.app/api/waitlist'),
         headers: {'Content-Type': 'application/json'},
-        body: json.encode({
+        body: jsonEncode({
           'email': _emailController.text.trim(),
           'name': _nameController.text.trim(),
         }),
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        setState(() {
-          _isSuccess = true;
-          _isLoading = false;
-        });
+        setState(() => _isSuccess = true);
+      } else if (response.statusCode == 409) {
+        setState(() => _errorMessage = "You're already on the list! ✨");
       } else {
-        setState(() {
-          _error = 'Something went wrong. Please try again.';
-          _isLoading = false;
-        });
+        setState(() => _errorMessage = 'Something went wrong. Try again.');
       }
     } catch (e) {
-      setState(() {
-        _error = 'No connection. Please try again.';
-        _isLoading = false;
-      });
+      setState(() => _errorMessage = 'No connection. Check your internet.');
+    } finally {
+      setState(() => _isLoading = false);
     }
   }
 
@@ -330,10 +324,10 @@ class _WaitlistScreenState extends State<WaitlistScreen>
                 keyboardType: TextInputType.emailAddress,
               ),
 
-              if (_error != null) ...[
+              if (_errorMessage != null) ...[
                 const SizedBox(height: 12),
                 Text(
-                  _error!,
+                  _errorMessage!,
                   style: const TextStyle(
                     color: Color(0xFFFF6B6B),
                     fontSize: 13,
